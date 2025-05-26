@@ -33,6 +33,8 @@ function solution(user_id, banned_id) {
         return list
     }
     
+    
+    // { "fr*d*": ["frodo", "fradi", "frodoc"] }
     banned_id.forEach((el)=>{
         banId_userId[el] = getBannedUserList(el)
     })
@@ -41,6 +43,7 @@ function solution(user_id, banned_id) {
     
     const getBanUser = (i,arr) =>{
         if(arr.length === banned_id.length){
+            // 이차원 배열 중복제거는 일차원으로 바꾸어 체크
             const newArr = arr.sort().join("-")
             if(!bannedList.includes(newArr)){
                 bannedList.push(newArr)
