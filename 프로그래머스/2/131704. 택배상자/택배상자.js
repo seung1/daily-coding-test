@@ -5,24 +5,24 @@ function solution(order) {
     // 서버 스택 
     let sub = []
     
-    let result = []
-    let i = 0
-    while(result.length !== order.length){
-        i = result.length
+    let answer = 0
+    while(answer !== order.length){
         let mainTop = main[main.length-1]
         let subTop = sub[sub.length-1]
         
         // 메인 탑보다 값이 큰경우 -> 서브로 이동
-        if(order[i] > mainTop){
+        if(order[answer] > mainTop){
             sub.push(main.pop())
         }
         // 메인 탑이랑 같은 경우 -> 결과로 이동
-        else if (order[i] === mainTop){
-            result.push(main.pop())
+        else if (order[answer] === mainTop){
+            main.pop()
+            answer += 1
         }
         // 메인 탑보다 작으면서 서브탑이랑 같은 경우 -> 결과로 이동
-        else if ( order[i] === sub[sub.length-1]) {
-            result.push(sub.pop())
+        else if ( order[answer] === sub[sub.length-1]) {
+            sub.pop()
+            answer += 1
         }
         // 나머지 -> 불가능
         else {
@@ -30,5 +30,5 @@ function solution(order) {
         }
     }
     
-    return result.length;
+    return answer;
 }
