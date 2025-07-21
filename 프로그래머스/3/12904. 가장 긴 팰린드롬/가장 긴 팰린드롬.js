@@ -1,46 +1,31 @@
-function solution(s)
-{
-    var answer = 1;
-    
-    // 홀수 길이 체크
-    const checkMaxLength = (i) => {
-        let len = 1
-        let add = 1
-        while (i+add < s.length && i-add>=0){
-            if(s[i+add]!==s[i-add]){
-                break
-            }
-            else{
-                len+=2
-            }
-            add += 1
+function solution(s) {
+    const n = s.length;
+    const dp = Array.from({ length: n }, () => Array(n).fill(false));
+    let maxLen = 1;
+
+    // 길이 1인 부분 문자열은 항상 팰린드롬
+    for (let i = 0; i < n; i++) {
+        dp[i][i] = true;
+    }
+
+    // 길이 2인 부분 문자열 처리
+    for (let i = 0; i < n - 1; i++) {
+        if (s[i] === s[i + 1]) {
+            dp[i][i + 1] = true;
+            maxLen = 2;
         }
-        return len
     }
-    
-    // 짝수 길이 체크
-    const checkMaxLength2 = (i) => {
-        let len = 0
-        let left = 0
-        let right = 1
-        while (i+right < s.length && i-left>=0){
-            if(s[i+right]!==s[i-left]){
-                break
+
+    // 길이 3 이상인 경우
+    for (let len = 3; len <= n; len++) {
+        for (let i = 0; i <= n - len; i++) {
+            const j = i + len - 1;
+            if (s[i] === s[j] && dp[i + 1][j - 1]) {
+                dp[i][j] = true;
+                maxLen = len;
             }
-            else{
-                len+=2
-            }
-            left += 1
-            right += 1
         }
-        return len
     }
-    
-    for(let i =0; i<s.length; i++){
-        const len = checkMaxLength(i)
-        const len2 = checkMaxLength2(i)
-        answer = Math.max(len,len2, answer)
-    }
-    
-    return answer;
+
+    return maxLen;
 }
