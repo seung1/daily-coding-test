@@ -1,6 +1,6 @@
 # [level 4] 호텔 방 배정 - 64063 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/64063) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/64063#) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 07월 21일 16:13:17
+2025년 07월 27일 13:59:21
 
 ### 문제 설명
 
