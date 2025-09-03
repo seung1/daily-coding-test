@@ -1,56 +1,57 @@
 function solution(n, edge) {
-    // graph 구성하기
-    const graph = {}
-    for (let i = 1; i<= n ; i++){
-        graph[i] = []
-    }
+    var answer = 0;
     
+    const map = {}
     edge.forEach((el)=>{
-        const [x,y] = el
-        graph[x].push(y)
-        graph[y].push(x)
+        const [start, end] = el
+        if(map[start]===undefined) map[start]=[]
+        if(map[end]===undefined) map[end]=[]
+        
+        map[start].push(end)
+        map[end].push(start)
     })
-
-    let answer = 0
     
-    const dist = { 1:0 }
+    const d = Array(n+1).fill(Infinity)
+    d[0] = 0
     
-    const bfs = () => {
-        const visited = new Set();
-        visited.add(1);
-        let needVisit = []
+    const bfs = (start)=>{
+        const visited = new Set()
+        const needVisit = []
         
-        // 각 원소에 노드와 거리 저장
-        needVisit.push(1)
+        visited.add(start)
+        needVisit.push({
+            node : start,
+            distance : 0
+        })
         
-        while ( needVisit.length> 0) {
-            const node = needVisit.shift()
+        while(needVisit.length>0){
+            const {node, distance} = needVisit.shift()
+            const nextNodes = map[node]
             
-            // 다음 거리에 있는 노드리스트
-            const nextNodes = graph[node]
-            nextNodes.forEach((el)=>{
-                if(!visited.has(el)) {
-                    
-                    dist[el] = dist[node]+1
-                    
-                    // 다음 순회할 노드 추가
-                    visited.add(el)
-                    needVisit.push(el)
+            if(d[node] > distance){
+                d[node] = distance
+            }
+            
+            nextNodes.forEach((node)=>{
+                if(!visited.has(node)){
+                    visited.add(node)
+                    needVisit.push({
+                        node:node,
+                        distance: distance+1
+                    })
                 }
             })
         }
     }
     
-    bfs()
+    bfs(1)
     
-    const valueList = Object.values(dist)
-    const maxValue = Math.max(...valueList)
-    
-    valueList.forEach((el)=>{
-        if(el === maxValue){
-            answer += 1
+    const maxDistance = Math.max(...d)
+    d.forEach((el)=>{
+        if(el===maxDistance){
+            answer+=1
         }
     })
     
-    return answer
+    return answer;
 }
