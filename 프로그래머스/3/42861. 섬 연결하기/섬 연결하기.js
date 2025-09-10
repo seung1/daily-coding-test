@@ -1,46 +1,30 @@
 function solution(n, costs) {
     var answer = 0;
     
-    // 최소비용의 다리부터 건설해나가기
-    const sortedCosts = costs.sort((a,b)=>a[2]-b[2])
+    // 코스트 오름차순 정렬
+    costs = costs.sort((a,b)=>a[2]-b[2])
     
-    let bridge = Array(n).fill().map((_,index)=>[index])
+    // 코스트를 하나씩 순회하면서, 각각이 다른 그룹에 속해져있을 경우 연결하기
+    let list = []
+    for(let i = 0; i < n; i++){
+        list.push([i])
+    }
     
-    while(sortedCosts.length>0){
-        const [start, end, cost] = sortedCosts.shift()
+    for(let i = 0; i<costs.length; i++){
+        const [start, end, cost] = costs[i]
         
-        // 연결된 다리인지 체크
-        let target1 = []
-        let target2 = []
-        let startI = 0
-        let endI = 0
-        for(let i =0; i<bridge.length; i++){
-            if(bridge[i].includes(start)){
-                target1 = bridge[i]
-                startI = i
-            }
-            if(bridge[i].includes(end)){
-                target2 = bridge[i]
-                endI = i
-            }
-            if(target1.length!==0 && target2.length!==0){
-                break
-            }
-        }
+        const sIndex = list.findIndex((el)=>el.includes(start))
+        const eIndex = list.findIndex((el)=>el.includes(end))
         
-        // 안연결된거면
-        if(startI !== endI){
-            // 코스트 추가
+        if(sIndex!==eIndex){
+            list[sIndex] = [...list[sIndex], ...list[eIndex]]
+            list = [...list.slice(0,eIndex), ...list.slice(eIndex+1)]
             answer += cost
             
-            // 연결하기
-            bridge[startI] = [...bridge[startI], ...bridge[endI]]
-            bridge.splice(endI,1)
-        }
-        
-        // 모든 섬이 연결됐으면 빠져나오기
-        if(bridge.length===1){
-            break
+            // 그룹이 하나가 되면 (= 하나로 연결되면) 끝내기
+            if(list.length===1){
+                break
+            }
         }
     }
     
