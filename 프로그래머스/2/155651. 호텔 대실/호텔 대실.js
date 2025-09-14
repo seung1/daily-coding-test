@@ -8,24 +8,33 @@ function solution(book_time) {
         const [eh,em] = end.split(":").map(Number)
         
         const startNum = sh*60+sm
-        const endNum = eh*60+em+9 // 청소시간 10분인데 9분을 추가해서 부등호로 비교
+        const endNum = eh*60+em+9 // 청소시간 10분인데 9분으로 겹치지 않게
         return [startNum, endNum]
     }
     
+    const time = Array(24*60+10).fill(0)
+    
     // 시작시간이 빠른 순서대로 정렬
     const numTime = book_time.map(convertTimeToNum)
-    const sortedTime = numTime.sort((a,b)=>b[0]-a[0])
     
-    // 순회하기
-    for(let i = 0; i<sortedTime.length; i++){
-        let count = 1 // 자기 자신 
-        for(let j = i+1; j<sortedTime.length; j++){
-            if(sortedTime[i][0]<=sortedTime[j][1]){
-                count+=1
-            }
+    numTime.forEach((el)=>{
+        const [start,end] = el
+        time[start] += 1
+        time[end+1] -= 1
+    })
+    
+    let max = 0
+    let prev = 0
+    time.forEach((el,index)=>{
+        if(index === 0){
+            prev = el
+            max = el
         }
-        answer = Math.max(answer, count)
-    }
+        else{
+            prev += el
+            max = Math.max(max,prev)
+        }
+    })
     
-    return answer;
+    return max;
 }
