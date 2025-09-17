@@ -1,6 +1,11 @@
 function solution(n, m, x, y, r, c, k) {
+    const sx = x-1
+    const sy = y-1
+    const ex = r-1
+    const ey = c-1
+    
     // 시작과 끝 좌표차이가 홀수인경우 || 짧은 경우 -> 불가능
-    const distance = Math.abs(x-r) + Math.abs(y-c)
+    const distance = Math.abs(sx-ex) + Math.abs(sy-ey)
     if(((k - distance) % 2 ===1) || (distance > k)){
         return "impossible"
     }
@@ -14,15 +19,15 @@ function solution(n, m, x, y, r, c, k) {
     const checkPossible = (x,y,d)=>{
         if(x<0 || y<0 || x>=n || y>=m) return false
         
-        const distance = Math.abs(x-(r-1)) + Math.abs(y-(c-1))
+        const distance = Math.abs(x-ex) + Math.abs(y-ey)
         return d >= distance
     }
     
-    const f = (start, d) => {
+    const f = (ix,iy, d) => {
         let visited = ""
         let remain = d
-        let x = start[0]
-        let y = start[1]
+        let x = ix
+        let y = iy
         
         while(remain > 0) {
             for(let i = 0; i< dir.length; i++){
@@ -45,5 +50,5 @@ function solution(n, m, x, y, r, c, k) {
         return visited
     } 
     
-    return f([x-1,y-1],k);
+    return f(sx, sy, k);
 }
