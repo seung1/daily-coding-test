@@ -1,54 +1,51 @@
 function solution(n, m, x, y, r, c, k) {
-    const sx = x-1
-    const sy = y-1
-    const ex = r-1
-    const ey = c-1
+    var answer = '';
     
-    // 시작과 끝 좌표차이가 홀수인경우 || 짧은 경우 -> 불가능
-    const distance = Math.abs(sx-ex) + Math.abs(sy-ey)
-    if(((k - distance) % 2 ===1) || (distance > k)){
+    // 도착까지 거리가 충분한지, 도착까지거리하고나서 짝수개가 남았는지
+    const remain = Math.abs(x-r) + Math.abs(y-c)
+    if(remain > k || (k-remain) %2 !==0){
         return "impossible"
     }
     
-    // d l r u 이거 순서대로 시도, 시도하면서 계속 가능한지 체크하기
-    // 불가능하면 -> 다음꺼시도
-    const dir = [[1,0], [0,-1], [0,1], [-1,0]]
-    const dirStr = { 0:"d", 1:"l", 2:"r", 3:"u" } 
+    // 0부터 인덱싱하기 때문에 1 빼기
+    const sx = x-1
+    const sy = y-1
+    const dx = r-1
+    const dy = c-1
     
-    // 현재 좌표, 남은 거리
-    const checkPossible = (x,y,d)=>{
-        if(x<0 || y<0 || x>=n || y>=m) return false
-        
-        const distance = Math.abs(x-ex) + Math.abs(y-ey)
-        return d >= distance
+    // 현재 위치에서, 도착할수 있는지 체크하는 함수
+    const checkImpossible = (a,b,d)=>{
+        const innerXY = a < n && a >=0 && b < m && b>=0
+        const remain = Math.abs(dx-a) + Math.abs(dy-b)
+        return innerXY && remain <=d
     }
     
-    const f = (ix,iy, d) => {
-        let visited = ""
-        let remain = d
-        let x = ix
-        let y = iy
+    // d l r u
+    const dir = [[1,0], [0,-1], [0,1], [-1,0]]
+    const dirStr = ["d","l","r","u"]
+    
+    // 순회하면서, 가능하면 그걸로 이동해서 계속 진행하기
+    const explore = (a,b,d) => {
+        let remainD = d
+        let curX = a
+        let curY = b
         
-        while(remain > 0) {
-            for(let i = 0; i< dir.length; i++){
-                const [dx,dy] = dir[i]
-                const newX = x+dx
-                const newY = y+dy
-                
-                // 범위에 안벗어나고 가능한지 체크
-                const isPossible = checkPossible(newX,newY,remain)
-                if(isPossible){
-                    remain -= 1
-                    visited += dirStr[i]
-                    x = newX
-                    y = newY
+        while(remainD > 0){
+            for(let i = 0 ; i<dir.length; i++){
+                const [x,y] = dir[i]
+                const newX = curX+x
+                const newY = curY+y
+                if(checkImpossible(newX,newY,remainD-1)){
+                    curX = newX
+                    curY = newY
+                    remainD -= 1
+                    answer += dirStr[i]
                     break
                 }
             }
         }
-        
-        return visited
-    } 
+    }
+    explore(sx,sy,k)
     
-    return f(sx, sy, k);
+    return answer;
 }
